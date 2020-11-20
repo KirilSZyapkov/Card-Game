@@ -1,0 +1,52 @@
+function cardGame(input) {
+    let listOfPlayers = {};
+    const cardType = {
+        'S': 4,
+        'H': 3,
+        'D': 2,
+        'C': 1
+    };
+    const cardPower = {
+        'J': 11,
+        'Q': 12,
+        'K': 13,
+        'A': 14
+    };
+
+    input.forEach(element => {
+        let [name, cards] = element.split(`: `);
+        cards = cards.split(`, `);
+        if (!listOfPlayers.hasOwnProperty(name)) {
+            listOfPlayers[name] = cards;
+        } else {
+            let tokenCards = listOfPlayers[name];
+            for (const nameElement of cards) {
+                if (!tokenCards.includes(nameElement)) {
+                    tokenCards.push(nameElement);
+                }
+            }
+        }
+    });
+
+    let entries = Object.entries(listOfPlayers);
+    for (let [name, cardList] of entries) {
+        let points = 0;
+        cardList = new Set(cardList);
+        for (let entry of cardList) {
+            entry = entry.split(``);
+            let T = entry.pop();
+            let P = entry.join(``);
+
+            if (isNaN(P)) {
+                P = cardPower[P];
+            }
+                points += P * cardType[T];
+
+        }
+        listOfPlayers[name] = points;
+    }
+    let keys = Object.keys(listOfPlayers);
+    for (let key of keys) {
+        console.log(`${key}: ${listOfPlayers[key]}`);
+    }
+}
